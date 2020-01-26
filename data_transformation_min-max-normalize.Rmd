@@ -1,0 +1,75 @@
+---
+title: "Data Transformation, Min-Max Feature Scaling"
+author: "Nicholas Rivera"
+date: "1/24/2020"
+output: pdf_document
+---
+
+A common task in statistics and machine learning is to transform the data to scale in order to more easily compare the data points. One method of scaling data down is to "Min-Max Feature Scaling" or "Normalization". The data is scaled down between a range of 0 and 1.
+
+The formula for Min-Max Normalization:
+
+![](https://wikimedia.org/api/rest_v1/media/math/render/svg/73032b45bffd5e5140483fbe1ed49bf174f1962d)
+
+We can follow some steps to programamtically complete the task with the following:
+
+1. Import the packages.
+2. import the dataset.
+3. Preprocess the data.
+4. Transform the data.
+
+# Feature Scaling using R
+R has the package called ["**Caret**"](http://topepo.github.io/caret/index.html) that can be used to scale our data.
+```{r}
+# Import the packages required to complete the Feature Scaling: caret.
+library("caret")
+
+# Import the dataset, the iris dataset is within R.
+library("datasets")
+data("iris")
+
+# Preprocess the data, use preProcess() function on the features.
+preprocess_params <- preProcess(iris[ , 1:4], method = c("range"))
+
+# Transform the data, use the predict() function on the features.
+iris_norm <- predict(preprocess_params, iris[ , 1:4])
+
+# The original dataset
+iris[1:5, 1:4]
+
+#The tranformed dataset
+iris_norm[1:5, ]
+```
+
+
+# Feature Scaling using Python
+Python can complete the normalization taks by using the ["**scikit-learn**"](https://scikit-learn.org/stable/index.html) package.
+```{python}
+# From Scikit-learn, I'm importing the "preprocessing" module.
+from sklearn import preprocessing
+
+# The iris dataset is contained within scikit-learn package, in the module "datasets"
+from sklearn import datasets
+
+# The data and the target variable are separated within the load_iris()
+X = datasets.load_iris().data
+
+# I will not use "y" in this demonstration, this is purely habit.
+y = datasets.load_iris().target
+
+# Create the "MinMaxScaler()" object from the "preprocessing" module. I pass the feature_range a tuple of 0 and 1 to indicate range.
+norm_scaler = preprocessing.MinMaxScaler(feature_range=(0, 1))
+
+# I create a new variable and pass the "x" through the "fit_transform()" method.
+X_norm = norm_scaler.fit_transform(X)
+
+# The original data.
+X[:5, :]
+
+# The normalized data.
+X_norm[:5, :]
+```
+
+
+# Conclusion
+You can see the results of both R and Python. Both languages can commplete the task of normalizing is just a few lines of code. Use the language you prefer.
